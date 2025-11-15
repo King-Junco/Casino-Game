@@ -74,3 +74,6 @@ crashlytics-build.properties
 
 # Windows
 Thumbs.db
+
+# Unity Assets 
+Assets/@PaulosCreations/
