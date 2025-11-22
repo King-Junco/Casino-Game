@@ -14,15 +14,22 @@ public class BettingSystem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI moneyText;
     [SerializeField] private TextMeshProUGUI betAmountText;
     [SerializeField] private TMP_InputField betInputField;
-    [SerializeField] private Transform horseButtonContainer;
-    [SerializeField] private GameObject horseButtonPrefab;
     [SerializeField] private Button placeBetButton;
+
+    [Header("Horse Selection")]
+    [SerializeField] private TMP_Dropdown horseDropdown;
+    [SerializeField] private List<Horse> horses = new List<Horse>();
 
     [Header("Result UI")]
     [SerializeField] private TextMeshProUGUI resultText;
 
+    [Header("Horse Stats")]
+    [SerializeField] private TextMeshProUGUI OddsText;
+    [SerializeField] private TextMeshProUGUI HorseSpeedText;
+    [SerializeField] private TextMeshProUGUI HorseVarationText; 
+
+
     private bool bettingLocked = false;
-    private List<Button> horseButtons = new List<Button>();
 
     void Start()
     {
@@ -31,71 +38,69 @@ public class BettingSystem : MonoBehaviour
 
         if (resultText != null)
         {
-            resultText.text = "";
+            resultText.text = "";  
         }
 
-        // Connect place bet button if assigned
+        // Connect place bet button
         if (placeBetButton != null)
         {
             placeBetButton.onClick.AddListener(PlaceBet);
         }
+
+        // Setup dropdown
+        SetupHorseDropdown();
+
+        // Listen for dropdown changes
+        if (horseDropdown != null)
+        {
+            horseDropdown.onValueChanged.AddListener(OnDropdownChanged);
+        }
     }
 
-    public void SetupHorseButtons(List<Horse> horses)
+    void SetupHorseDropdown()
     {
-        // Clear existing buttons
-        foreach (Button btn in horseButtons)
-        {
-            Destroy(btn.gameObject);
-        }
-        horseButtons.Clear();
+        if (horseDropdown == null) return;
 
-        // Create button for each horse
+        // Clear existing options
+        horseDropdown.ClearOptions();
+
+        // Create option list
+        List<string> options = new List<string>();
+
         foreach (Horse horse in horses)
         {
-            GameObject buttonObj;
-
-            if (horseButtonPrefab != null)
+            if (horse != null)
             {
-                buttonObj = Instantiate(horseButtonPrefab, horseButtonContainer);
+                options.Add($"{horse.GetHorseName()}");
             }
-            else
-            {
-                // Create simple button if no prefab
-                buttonObj = new GameObject($"Horse{horse.GetHorseNumber()}Button");
-                buttonObj.transform.SetParent(horseButtonContainer);
-                buttonObj.AddComponent<Image>();
-                buttonObj.AddComponent<Button>();
+        }
 
-                GameObject textObj = new GameObject("Text");
-                textObj.transform.SetParent(buttonObj.transform);
-                textObj.AddComponent<TextMeshProUGUI>();
-            }
+        // Add to dropdown
+        horseDropdown.AddOptions(options);
 
-            Button btn = buttonObj.GetComponent<Button>();
-            TextMeshProUGUI btnText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-
-            if (btnText != null)
-            {
-                btnText.text = $"{horse.GetHorseName()}\nOdds: {horse.GetOdds()}:1";
-            }
-
-            Horse horseRef = horse; // Capture for lambda
-            btn.onClick.AddListener(() => SelectHorse(horseRef));
-
-            horseButtons.Add(btn);
+        // Select first by default
+        if (horses.Count > 0)
+        {
+            horseDropdown.value = 0;
+            bettedHorse = horses[0];
         }
     }
 
-    public void SelectHorse(Horse horse)
+    void OnDropdownChanged(int index)
     {
         if (bettingLocked) return;
 
-        bettedHorse = horse;
-
-        if (resultText != null)
+        if (index >= 0 && index < horses.Count)
         {
-            resultText.text = $"Selected: {horse.GetHorseName()}";
+            bettedHorse = horses[index];
+
+            UpdateHorseStats(bettedHorse);
+            /*
+            if (resultText != null)
+            {
+                resultText.text = $"Selected: {bettedHorse.GetHorseName()}";
+            }
+            */
         }
     }
 
@@ -129,7 +134,7 @@ public class BettingSystem : MonoBehaviour
 
             UpdateMoneyDisplay();
             UpdateBetDisplay();
-            ShowResult($"Bet ${betAmount} on {bettedHorse.GetHorseName()}");
+            ShowResult($"Bet ${betAmount:F2} on {bettedHorse.GetHorseName()}");
         }
         else
         {
@@ -143,15 +148,13 @@ public class BettingSystem : MonoBehaviour
 
         if (bettedHorse == winner)
         {
-            // Player wins
             float winnings = currentBetAmount * winner.GetOdds();
             playerMoney += winnings;
-            ShowResult($"YOU WIN! +${winnings}");
+            ShowResult($"YOU WIN! +${winnings:F2}");
         }
         else
         {
-            // Player loses
-            ShowResult($"You Lost! -{currentBetAmount}");
+            ShowResult($"You Lost! -${currentBetAmount:F2}");
         }
 
         currentBetAmount = 0;
@@ -165,9 +168,9 @@ public class BettingSystem : MonoBehaviour
     {
         bettingLocked = true;
 
-        foreach (Button btn in horseButtons)
+        if (horseDropdown != null)
         {
-            btn.interactable = false;
+            horseDropdown.interactable = false;
         }
 
         if (placeBetButton != null)
@@ -180,9 +183,9 @@ public class BettingSystem : MonoBehaviour
     {
         bettingLocked = false;
 
-        foreach (Button btn in horseButtons)
+        if (horseDropdown != null)
         {
-            btn.interactable = true;
+            horseDropdown.interactable = true;
         }
 
         if (placeBetButton != null)
@@ -194,6 +197,15 @@ public class BettingSystem : MonoBehaviour
         {
             resultText.text = "";
         }
+    }
+
+    void UpdateHorseStats(Horse horse)
+    {
+        if (horse == null) return;
+
+        OddsText.text = $"Odds: {horse.GetOdds()}";
+        HorseSpeedText.text = $"Speed: {horse.GetBaseSpeed()}";
+        HorseVarationText.text = $"Luck: {horse.GetSpeedVariationMin()} - {horse.GetSpeedVariationMax()}";
     }
 
     void UpdateMoneyDisplay()
@@ -212,10 +224,20 @@ public class BettingSystem : MonoBehaviour
         }
     }
 
-    void ShowResult(string message)
+    public void HideResult() 
+    {
+        if (resultText != null) 
+        {
+            resultText.text = "";
+            resultText.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowResult(string message)
     {
         if (resultText != null)
         {
+            resultText.gameObject.SetActive(true);
             resultText.text = message;
         }
     }

@@ -17,6 +17,7 @@ public class RaceManager : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private Button startRaceButton;
+    [SerializeField] private GameObject bettingUIContainer; // Panel/GameObject to disable during race
 
     [Header("Betting")]
     [SerializeField] private BettingSystem bettingSystem;
@@ -49,12 +50,6 @@ public class RaceManager : MonoBehaviour
         {
             startRaceButton.onClick.AddListener(StartRace);
         }
-
-        // Setup betting system with horses
-        if (bettingSystem != null)
-        {
-            bettingSystem.SetupHorseButtons(horses);
-        }
     }
 
     void Update()
@@ -83,6 +78,14 @@ public class RaceManager : MonoBehaviour
         {
             startRaceButton.interactable = false;
         }
+
+        // Hide betting UI
+        if (bettingUIContainer != null)
+        {
+            bettingUIContainer.SetActive(false);
+        }
+
+        bettingSystem.HideResult(); //hide result Text 
 
         // Lock betting
         if (bettingSystem != null)
@@ -153,6 +156,12 @@ public class RaceManager : MonoBehaviour
         if (startRaceButton != null)
         {
             startRaceButton.interactable = true;
+        }
+
+        // Show betting UI again
+        if (bettingUIContainer != null)
+        {
+            bettingUIContainer.SetActive(true);
         }
 
         // Unlock betting
