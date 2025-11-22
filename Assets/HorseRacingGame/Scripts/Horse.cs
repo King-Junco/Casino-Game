@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Horse : MonoBehaviour
@@ -17,34 +18,66 @@ public class Horse : MonoBehaviour
     private float currentSpeed;
     private bool isRacing = false;
     private Vector3 startingPosition;
+    private float pace;
+    private float burstTimer = 0f;
+    private float timeBetweenBursts = 1.0f;
+    private Animator animator;
 
     void Start()
     {
         startingPosition = transform.position;
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if (isRacing)
+        if (!isRacing) return;
+        
+        // Move horse forward
+        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
+
+        // update animation
+        animator.SetFloat("Speed", currentSpeed);
+
+        // Burst timing
+        burstTimer += Time.deltaTime;
+
+        if (burstTimer >= timeBetweenBursts) 
         {
-            // Move horse forward
-            transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
+            burstTimer = 0f;
+            ApplyBurst();
         }
+
+        // fade burst 
+        currentSpeed = Mathf.Lerp(currentSpeed, pace, Time.deltaTime * 2f);
+        //currentSpeed = Mathf.Max(0f, currentSpeed);
+        
     }
+
 
     public void StartRace()
     {
         isRacing = true;
         
         // Roll steady pace
-        float pace = baseSpeed + Random.Range(paceMin, paceMax);
+        pace = baseSpeed + Random.Range(paceMin, paceMax);
 
-        //Roll random burst
-        float burst = Random.Range(burstMin, burstMax);
+        //pace = Mathf.Max(0f, pace);
 
         // Total speed
+        currentSpeed = pace; 
+
+    }
+
+    void ApplyBurst()
+    {
+        // Roll a burst that temporarily modifies the speed
+        float burst = Random.Range(burstMin, burstMax);
+
+        //Burst short-term effect
         currentSpeed = pace + burst;
 
+        //currentSpeed = Mathf.Max(0f, currentSpeed);
     }
 
     public void ResetPosition()
