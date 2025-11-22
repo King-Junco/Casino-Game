@@ -26,7 +26,8 @@ public class BettingSystem : MonoBehaviour
     [Header("Horse Stats")]
     [SerializeField] private TextMeshProUGUI OddsText;
     [SerializeField] private TextMeshProUGUI HorseSpeedText;
-    [SerializeField] private TextMeshProUGUI HorseVarationText; 
+    [SerializeField] private TextMeshProUGUI HorsePaceText;
+    [SerializeField] private TextMeshProUGUI HorseBurstText;
 
 
     private bool bettingLocked = false;
@@ -205,7 +206,8 @@ public class BettingSystem : MonoBehaviour
 
         OddsText.text = $"Odds: {horse.GetOdds()}";
         HorseSpeedText.text = $"Speed: {horse.GetBaseSpeed()}";
-        HorseVarationText.text = $"Luck: {horse.GetSpeedVariationMin()} - {horse.GetSpeedVariationMax()}";
+        HorsePaceText.text = $"Pace: {horse.GetPaceMin()} - {horse.GetPaceMax()}";
+        HorseBurstText.text = $"Burst: {horse.GetBurstMin} - {horse.GetBurstMax()}";
     }
 
     void UpdateMoneyDisplay()

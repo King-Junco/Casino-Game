@@ -499,8 +499,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18.497, y: -10.872}
-  m_SizeDelta: {x: 129.4526, y: 21.7446}
+  m_AnchoredPosition: {x: -0.0011692, y: -10.872}
+  m_SizeDelta: {x: 166.44, y: 21.744}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &77821217
 MonoBehaviour:
@@ -635,8 +635,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18.493, y: -32.617}
-  m_SizeDelta: {x: 129.4526, y: 21.7446}
+  m_AnchoredPosition: {x: 0.0017929, y: -32.617}
+  m_SizeDelta: {x: 166.44, y: 21.745}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &89862344
 MonoBehaviour:
@@ -858,16 +858,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 663813301}
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: odds
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: baseSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_3
+      value: Sleepy
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseNumber
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: speedVariationMax
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: speedVariationMin
-      value: -2
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_Name
@@ -875,7 +887,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.586
+      value: -3.7389998
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -913,6 +925,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: fd1be61000ff7bb4097b2b0591ad104a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1577,16 +1593,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 663813301}
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: odds
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: baseSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_6
+      value: Dust Kicker
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseNumber
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: speedVariationMax
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: speedVariationMin
-      value: -2
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_Name
@@ -1594,7 +1622,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.514
+      value: 5.361
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1632,6 +1660,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ae03601d935bd1446a8f9236ade31f9c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2247,7 +2279,6 @@ Transform:
   - {fileID: 2023873166}
   - {fileID: 358986021}
   - {fileID: 2014507031}
-  - {fileID: 1538242264}
   - {fileID: 375343347}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2296,7 +2327,7 @@ MonoBehaviour:
   - {fileID: 2023873167}
   - {fileID: 358986022}
   - {fileID: 2014507032}
-  - {fileID: 1538242265}
+  - {fileID: 0}
   resultText: {fileID: 1514533036}
   OddsText: {fileID: 690357463}
   HorseSpeedText: {fileID: 77821217}
@@ -2335,8 +2366,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18.497, y: 10.872}
-  m_SizeDelta: {x: 129.4526, y: 21.7446}
+  m_AnchoredPosition: {x: -0.0022373, y: 10.872}
+  m_SizeDelta: {x: 166.44, y: 21.7446}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &690357463
 MonoBehaviour:
@@ -2482,16 +2513,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 663813301}
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: odds
+      value: 1.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: baseSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_4
+      value: Old Reliable
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseNumber
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: speedVariationMax
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: speedVariationMin
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_Name
@@ -2499,7 +2542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.529
+      value: -1.6819999
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2537,6 +2580,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d95861bff23f76740a749bee4da07f92, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3331,8 +3378,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 10}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 108.358, y: 9.3571}
+  m_SizeDelta: {x: 216.7161, y: 48.7142}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1514533036
 MonoBehaviour:
@@ -3569,91 +3616,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518901558}
   m_CullTransparentMesh: 1
---- !u!1001 &1538242263
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 663813301}
-    m_Modifications:
-    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: horseName
-      value: Old Basic_8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: horseNumber
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: speedVariationMin
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_Name
-      value: Horse_001 (8)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8.478
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -25.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
---- !u!4 &1538242264 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-  m_PrefabInstance: {fileID: 1538242263}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1538242265 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
-  m_PrefabInstance: {fileID: 1538242263}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99e3567fc6dac5045b3e554c23d38e2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Horse
 --- !u!1 &1548444144
 GameObject:
   m_ObjectHideFlags: 0
@@ -3892,16 +3854,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 663813301}
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: odds
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: baseSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_5
+      value: Risk it All
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseNumber
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: speedVariationMax
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: speedVariationMin
-      value: -2
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_Name
@@ -3909,7 +3883,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.41
+      value: 1.2570001
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3947,6 +3921,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ff73ca04c5e9ac747ae9fb4bfffc067a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4525,16 +4503,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 663813301}
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: odds
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: baseSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_7
+      value: Thunder Snack
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseNumber
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: speedVariationMax
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: speedVariationMin
-      value: -2
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_Name
@@ -4542,7 +4532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.502
+      value: 7.349
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4580,6 +4570,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5db8ceb471079c54ca33164643aab96f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4610,8 +4604,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 663813301}
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: odds
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_5
+      value: New Guy
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseNumber
@@ -4619,7 +4617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: speedVariationMin
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_Name
@@ -4627,7 +4625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.58
+      value: 3.427
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4665,6 +4663,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d58bdfa073c01264b8b62c2a1ce47a44, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5080,8 +5082,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 663813301}
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: odds
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: baseSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_2
+      value: Coin Flip
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseNumber
@@ -5097,7 +5107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.421
+      value: -5.574
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5135,6 +5145,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4e7497a5c4e9c3847896f38e210bf21b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5166,11 +5180,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: horseName
-      value: Old Basic_1
+      value: Old Basic
       objectReference: {fileID: 0}
     - target: {fileID: 3745708818881536551, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: speedVariationMin
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 3829295074380803052, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_Name
@@ -5178,7 +5192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.477
+      value: -7.63
       objectReference: {fileID: 0}
     - target: {fileID: 4405328765335265258, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5216,6 +5230,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5069329048507734659, guid: 7b901771a1be21c47acc82f0201b6fd5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: bac88f3657bb6964c899e783dd81bd11, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

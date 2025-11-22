@@ -6,8 +6,10 @@ public class Horse : MonoBehaviour
     [SerializeField] private int horseNumber;
     [SerializeField] private string horseName;
     [SerializeField] private float baseSpeed = 5f;
-    [SerializeField] private float speedVariationMin = -2f;
-    [SerializeField] private float speedVariationMax = 2f;
+    [SerializeField] private float paceMin = -2f;
+    [SerializeField] private float paceMax = 2f;
+    [SerializeField] private float burstMin = 0;
+    [SerializeField] private float burstMax = 2f;
 
     [Header("Odds")]
     [SerializeField] private float odds = 2.0f; // Payout multiplier
@@ -33,8 +35,16 @@ public class Horse : MonoBehaviour
     public void StartRace()
     {
         isRacing = true;
-        // Randomize speed within variation range
-        currentSpeed = baseSpeed + Random.Range(speedVariationMin, speedVariationMax);
+        
+        // Roll steady pace
+        float pace = baseSpeed + Random.Range(paceMin, paceMax);
+
+        //Roll random burst
+        float burst = Random.Range(burstMin, burstMax);
+
+        // Total speed
+        currentSpeed = pace + burst;
+
     }
 
     public void ResetPosition()
@@ -58,8 +68,10 @@ public class Horse : MonoBehaviour
     public int GetHorseNumber() => horseNumber;
     public string GetHorseName() => horseName;
     public float GetOdds() => odds;
-    public float GetSpeedVariationMin() => speedVariationMin;
-    public float GetSpeedVariationMax() => speedVariationMax;
+    public float GetPaceMin() => paceMin;
+    public float GetPaceMax() => paceMax;
+    public float GetBurstMin => burstMin;
+    public float GetBurstMax() => burstMax;
     public float GetBaseSpeed() => baseSpeed;
 
 }
