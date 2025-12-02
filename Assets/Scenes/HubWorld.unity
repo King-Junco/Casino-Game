@@ -185,7 +185,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 928eba16c6f12b143a8aa89360a29550, type: 2}
+  - {fileID: 2100000, guid: 46520598d89e147ca90bd2066c8fba1f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -231,6 +231,91 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &932947423
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1807596525003398309, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_Name
+      value: PF_PortalGate (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -20.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.47003385
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.88264847
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -123.927
+      objectReference: {fileID: 0}
+    - target: {fileID: 6617870123305081989, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7976690882596049606, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 1612384882}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1807596525003398309, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 932947425}
+  m_SourcePrefab: {fileID: 100100000, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+--- !u!1 &932947424 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1807596525003398309, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+  m_PrefabInstance: {fileID: 932947423}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &932947425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932947424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd67df1b89cd0a245a15ad5e2f9c7af3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PortalGate
+  sceneToLoad: Blackjack
+  transitionDelay: 0.5
+  activationDistance: 5
+  playerTransform: {fileID: 0}
 --- !u!1 &1016809950
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,8 +507,32 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1807596525003398309, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5156584057040473707}
   m_SourcePrefab: {fileID: 100100000, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+--- !u!1 &5156584057040473706 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1807596525003398309, guid: ef89bb0390114b4459bc930768d3da60, type: 3}
+  m_PrefabInstance: {fileID: 5156584057040473705}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5156584057040473707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5156584057040473706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd67df1b89cd0a245a15ad5e2f9c7af3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PortalGate
+  sceneToLoad: 
+  transitionDelay: 0.5
+  activationDistance: 5
+  playerTransform: {fileID: 0}
 --- !u!1001 &8975291697786752447
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -488,4 +597,5 @@ SceneRoots:
   - {fileID: 1016809952}
   - {fileID: 448514685}
   - {fileID: 5156584057040473705}
+  - {fileID: 932947423}
   - {fileID: 8975291697786752447}
