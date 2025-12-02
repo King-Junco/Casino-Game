@@ -1,4 +1,3 @@
-// BlackjackGameManager.cs
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -46,6 +45,7 @@ public class BlackjackGameManager : MonoBehaviour
     public void StartGame()
     {
         int betAmount = 0;
+        Debug.Log("StartGame called!");
         
         if (betInputField != null && int.TryParse(betInputField.text, out betAmount))
         {
@@ -165,8 +165,9 @@ public class BlackjackGameManager : MonoBehaviour
     
     private void EndRound(string message, bool isPush, float winMultiplier = 2f)
     {
-        messageText.text = message;
-        
+        if (messageText != null)
+            messageText.text = message;
+    
         if (isPush)
         {
             blackjackbettingSystem.PushBet();
@@ -186,7 +187,7 @@ public class BlackjackGameManager : MonoBehaviour
         {
             blackjackbettingSystem.LoseBet();
         }
-        
+    
         SetGameState(GameState.GameOver);
     }
     
@@ -220,19 +221,31 @@ public class BlackjackGameManager : MonoBehaviour
     private void SetGameState(GameState newState)
     {
         currentState = newState;
-        
-        hitButton.interactable = (currentState == GameState.PlayerTurn);
-        standButton.interactable = (currentState == GameState.PlayerTurn);
-        dealButton.interactable = (currentState == GameState.Betting || currentState == GameState.GameOver);
-        
+    
+        if (hitButton != null)
+            hitButton.interactable = (currentState == GameState.PlayerTurn);
+    
+        if (standButton != null)
+            standButton.interactable = (currentState == GameState.PlayerTurn);
+    
+        if (dealButton != null)
+            dealButton.interactable = (currentState == GameState.Betting || currentState == GameState.GameOver);
+    
         if (bettingPanel != null)
         {
             bettingPanel.SetActive(currentState == GameState.Betting || currentState == GameState.GameOver);
         }
-        
-        if (currentState == GameState.Betting)
+    
+        if (messageText != null)
         {
-            messageText.text = "Place your bet!";
+            if (currentState == GameState.Betting)
+            {
+                messageText.text = "Place your bet!";
+            }
+            else if (currentState == GameState.PlayerTurn)
+            {
+                messageText.text = ""; 
+            }
         }
     }
 }
