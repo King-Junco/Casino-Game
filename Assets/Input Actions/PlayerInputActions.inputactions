@@ -133,6 +133,45 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Dice",
+            "id": "345fb23e-a0aa-4ec2-a38d-b05807d49380",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "f29c56b6-5895-4a93-aa75-0383699d5fe1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c32a6db0-b6c6-4d68-9b82-95807ab9277e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fa565259-10d7-4850-bd47-862e1b00acc6",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
