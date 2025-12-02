@@ -345,6 +345,7 @@ public class DiceManager : MonoBehaviour
     // try to purchase and unlock the next inactive die; returns true on success
     public bool TryPurchaseUnlockDice()
     {
+        if (isRolling) return false;
         int cost = GetNextDiceCost();
         if (playerBalance < cost) return false;
 

@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 
 public class ShopManager : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI rollsLeftText;
     [Tooltip("Text element to display cost for unlocking the next die.")]
     public TextMeshProUGUI buyCostText;
+    [SerializeField] public TextMeshProUGUI errorText;
+    [SerializeField] public TextMeshProUGUI confirmationText;
+
 
     [Header("Buttons (optional)")]
     [Tooltip("Optional reference to the Roll UI Button so ShopManager can auto-wire the click and enable/disable it.")]
@@ -39,14 +43,15 @@ public class ShopManager : MonoBehaviour
     public Button buyButton;
 
     [Header("Upgrade UI (optional)")]
-    [Tooltip("Input field where designer/player can enter the die index to upgrade (0-based).")]
-    public TMP_InputField upgradeIndexInput;
+    [Tooltip("Dropdown where player selects the die to upgrade (1-6). Displayed values are 1-6, underlying index is 0-based.")]
+    public TMP_Dropdown upgradeIndexDropdown;
 
     [Tooltip("Text element to display the cost for upgrading the chosen die.")]
     public TextMeshProUGUI upgradeCostText;
 
     [Tooltip("Button to purchase an upgrade for the entered die index.")]
     public Button upgradeButton;
+
 
     private void OnEnable()
     {
@@ -74,6 +79,8 @@ public class ShopManager : MonoBehaviour
             rollButton.onClick.RemoveListener(OnRollButtonPressed);
         if (payoutButton != null)
             payoutButton.onClick.RemoveListener(OnPayoutButtonPressed);
+        if (upgradeIndexDropdown != null)
+            upgradeIndexDropdown.onValueChanged.RemoveAllListeners();
     }
 
     private void OnPayoutCalculated(int payout, int sum)
@@ -129,23 +136,23 @@ public class ShopManager : MonoBehaviour
     private void UpdateUpgradeDisplay()
     {
         if (diceManager == null) return;
-
         int index = 0;
-        if (upgradeIndexInput != null)
+        if (upgradeIndexDropdown != null)
         {
-            int.TryParse(upgradeIndexInput.text, out index);
+            index = upgradeIndexDropdown.value; // zero-based
         }
 
         if (upgradeCostText != null)
         {
             int cost = diceManager.GetUpgradeCost(index);
-            upgradeCostText.text = $"Upgrade (die {index}): {cost}";
+            upgradeCostText.text = $"Upgrade (die {index + 1}): {cost}";
         }
 
         if (upgradeButton != null)
         {
             int cost = diceManager.GetUpgradeCost(index);
-            upgradeButton.interactable = diceManager.GetPlayerBalance() >= cost && (diceManager != null && index >= 0 && index < (diceManager != null ? (diceManager.GetLastFaces().Length) : 0));
+            int facesLen = (diceManager != null ? diceManager.GetLastFaces().Length : 0);
+            upgradeButton.interactable = diceManager.GetPlayerBalance() >= cost && index >= 0 && index < facesLen;
         }
     }
 
@@ -169,7 +176,7 @@ public class ShopManager : MonoBehaviour
         int payout = diceManager.GetLastPayout();
         if (payout <= 0)
         {
-            Debug.Log("No payout available to apply");
+            showError("No payout available to apply.");
             // ensure button disabled to reflect no payout
             if (payoutButton != null) payoutButton.interactable = false;
             return;
@@ -190,13 +197,13 @@ public class ShopManager : MonoBehaviour
         bool ok = diceManager.TryPurchaseUnlockDice();
         if (ok)
         {
-            Debug.Log($"Purchased die for {cost}");
+            showConfirmation($"Purchased new die for {cost}!");
             UpdateBalanceDisplay();
             UpdateBuyDisplay();
         }
         else
         {
-            Debug.Log($"Cannot purchase die for {cost} — insufficient funds or none available");
+            showError($"Cannot purchase new die for {cost} — insufficient funds or all dice unlocked.");
         }
     }
 
@@ -225,6 +232,22 @@ public class ShopManager : MonoBehaviour
             upgradeButton.onClick.RemoveListener(OnUpgradeButtonPressed);
             upgradeButton.onClick.AddListener(OnUpgradeButtonPressed);
         }
+
+        // Populate the upgrade dropdown (1-6) and wire change listener to refresh UI
+        if (upgradeIndexDropdown != null)
+        {
+            // Ensure options 1..6 are present
+            if (upgradeIndexDropdown.options == null || upgradeIndexDropdown.options.Count != 6)
+            {
+                upgradeIndexDropdown.ClearOptions();
+                List<string> opts = new List<string>();
+                for (int i = 1; i <= 6; i++) opts.Add(i.ToString());
+                upgradeIndexDropdown.AddOptions(opts);
+            }
+
+            upgradeIndexDropdown.onValueChanged.RemoveAllListeners();
+            upgradeIndexDropdown.onValueChanged.AddListener((int v) => UpdateUpgradeDisplay());
+        }
     }
 
     // Called by UI upgrade button
@@ -234,27 +257,23 @@ public class ShopManager : MonoBehaviour
         if (diceManager == null) return;
 
         int index = 0;
-        if (upgradeIndexInput != null)
+        if (upgradeIndexDropdown != null)
         {
-            if (!int.TryParse(upgradeIndexInput.text, out index))
-            {
-                Debug.Log("Invalid upgrade index");
-                return;
-            }
+            index = upgradeIndexDropdown.value; // zero-based
         }
 
         int cost = diceManager.GetUpgradeCost(index);
         bool ok = diceManager.TryPurchaseUpgradeDie(index);
         if (ok)
         {
-            Debug.Log($"Upgraded die {index} for {cost}");
+            showConfirmation($"Upgraded die {index} for {cost}!");
             UpdateBalanceDisplay();
             UpdateUpgradeDisplay();
             UpdateBuyDisplay();
         }
         else
         {
-            Debug.Log($"Cannot upgrade die {index} for {cost} — insufficient funds or invalid index/already upgraded");
+            showError($"Cannot upgrade die {index} for {cost} — insufficient funds or invalid die.");
         }
     }
 
@@ -265,7 +284,6 @@ public class ShopManager : MonoBehaviour
         Button1.SetActive(isOpen);
         Button2.SetActive(isOpen);
         Button3.SetActive(isOpen);
-        balanceText.gameObject.SetActive(isOpen);
         dicePrice.gameObject.SetActive(isOpen);
 
         if (isOpen)
@@ -286,4 +304,30 @@ public class ShopManager : MonoBehaviour
         }
 
     }
+    public void showError(string message)
+    {
+        errorText.gameObject.SetActive(true);
+        errorText.text = message;
+        while (errorText.alpha > 0)
+        {
+            errorText.alpha -= Time.deltaTime;
+        }
+        errorText.gameObject.SetActive(false);
+        errorText.alpha = 1;
+
+    }
+
+    public void showConfirmation(string message)
+    {
+        confirmationText.gameObject.SetActive(true);
+        confirmationText.text = message;
+        while (confirmationText.alpha > 0)
+        {
+            confirmationText.alpha -= Time.deltaTime;
+        }
+        confirmationText.gameObject.SetActive(false);
+        confirmationText.alpha = 1;
+
+    }
 }
+
