@@ -60,7 +60,7 @@ public class SapphiArtChan_AnimManager : MonoBehaviour {
     void Start()
     {
         _SapphiArtChanAnimator = this.gameObject.GetComponent<Animator>();
-       // _AnimationManagerUI = GameObject.Find("AnimationManagerUI").GetComponent<AnimationManagerUI>();
+        _AnimationManagerUI = GameObject.Find("AnimationManagerUI").GetComponent<AnimationManagerUI>();
 
         Transform[] SapphiArtchanChildren = GetComponentsInChildren<Transform>();
 
@@ -93,7 +93,7 @@ public class SapphiArtChan_AnimManager : MonoBehaviour {
         else
         {
             //Set Animation Parameter
-           // _SapphiArtChanAnimation = _AnimationManagerUI._Animation;
+            _SapphiArtChanAnimation = _AnimationManagerUI._Animation;
             //_SapphiArtChanAnimation = "hit01";
         }
     }
@@ -194,7 +194,7 @@ public class SapphiArtChan_AnimManager : MonoBehaviour {
         }
     }
 
-   
+
     void SetFacial()
     {
 
@@ -449,7 +449,7 @@ public class SapphiArtChan_AnimManager : MonoBehaviour {
         }
     }
 
-    
+
 
     void Update ()
     {
@@ -465,11 +465,10 @@ public class SapphiArtChan_AnimManager : MonoBehaviour {
         }
 
     }
-   
+
     void LateUpdate()
     {
         //Set Facial
         SetFacial();
     }
-    
 }
