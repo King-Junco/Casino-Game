@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HubWorld.unity
     guid: 1dc5f05c80c98b343aef5ab26fde83a5
+  - enabled: 1
+    path: Assets/BlackJack/Blackjack.unity
+    guid: 4b0cfd95927994ea6a6bdb6ec1eec7a2
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: d36dd9469e2e90a4da05034f064b3024, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 50246cb25a225b4469575d6c0efcd411, type: 3}
