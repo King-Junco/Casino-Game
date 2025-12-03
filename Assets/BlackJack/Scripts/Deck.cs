@@ -21,14 +21,12 @@ public class Deck : MonoBehaviour
         Shuffle();
     }
     
-    public void Shuffle()
+    private void Shuffle()
     {
         for (int i = 0; i < deck.Count; i++)
         {
             int randomIndex = Random.Range(i, deck.Count);
-            GameObject temp = deck[i];
-            deck[i] = deck[randomIndex];
-            deck[randomIndex] = temp;
+            (deck[i], deck[randomIndex]) = (deck[randomIndex], deck[i]);
         }
     }
     

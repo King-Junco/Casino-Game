@@ -7,7 +7,8 @@ public class Hand : MonoBehaviour
     public Transform cardParent;
     public Vector3 cardStartPosition;
     public Vector3 cardOffset;
-    
+    public Vector3 cardRotation = new Vector3(90, 0, 0);
+
     public void AddCard(GameObject card)
     {
         cards.Add(card);
@@ -72,6 +73,7 @@ public class Hand : MonoBehaviour
         for (int i = 0; i < cards.Count; i++)
         {
             cards[i].transform.position = cardStartPosition + (cardOffset * i);
+            cards[i].transform.rotation = Quaternion.Euler(cardRotation); 
         }
     }
 }

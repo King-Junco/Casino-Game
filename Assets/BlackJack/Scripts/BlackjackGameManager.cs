@@ -45,7 +45,6 @@ public class BlackjackGameManager : MonoBehaviour
     public void StartGame()
     {
         int betAmount = 0;
-        Debug.Log("StartGame called!");
         
         if (betInputField != null && int.TryParse(betInputField.text, out betAmount))
         {
@@ -66,21 +65,17 @@ public class BlackjackGameManager : MonoBehaviour
         dealerHand.ClearHand();
         dealerCardHidden = false;
         
-        // Deal initial cards
         playerHand.AddCard(deck.DealCard(playerHand.cardParent, playerHand.cardStartPosition));
         dealerHand.AddCard(deck.DealCard(dealerHand.cardParent, dealerHand.cardStartPosition));
         playerHand.AddCard(deck.DealCard(playerHand.cardParent, playerHand.cardStartPosition));
         
-        // Dealer's second card (face down)
         dealerHiddenCard = deck.DealCard(dealerHand.cardParent, dealerHand.cardStartPosition);
         dealerHand.AddCard(dealerHiddenCard);
         dealerCardHidden = true;
         
-        // Hide dealer's second card (you'll need to implement card flipping)
         if (dealerHiddenCard != null)
         {
-            // Rotate or hide the card model here
-            dealerHiddenCard.transform.rotation = Quaternion.Euler(0, 180, 0);
+            dealerHiddenCard.transform.rotation = Quaternion.Euler(270, 0, 0);
         }
         
         UpdateScores();
@@ -130,7 +125,6 @@ public class BlackjackGameManager : MonoBehaviour
     {
         UpdateScores();
         
-        // Dealer hits until 17 or higher
         while (dealerHand.GetHandValue() < 17)
         {
             dealerHand.AddCard(deck.DealCard(dealerHand.cardParent, dealerHand.cardStartPosition));
@@ -195,7 +189,7 @@ public class BlackjackGameManager : MonoBehaviour
     {
         if (dealerCardHidden && dealerHiddenCard != null)
         {
-            dealerHiddenCard.transform.rotation = Quaternion.Euler(0, 0, 0);
+            dealerHiddenCard.transform.rotation = Quaternion.Euler(90, 0, 0); 
             dealerCardHidden = false;
             UpdateScores();
         }
@@ -244,7 +238,7 @@ public class BlackjackGameManager : MonoBehaviour
             }
             else if (currentState == GameState.PlayerTurn)
             {
-                messageText.text = ""; 
+                messageText.text = "";
             }
         }
     }
