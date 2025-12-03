@@ -3,12 +3,12 @@ using TMPro;
 
 public class BlackjackBettingSystem : MonoBehaviour
 {
-    public int playerChips = 1000;
+    public int playerMoney = 1000;
     public int currentBet = 0;
     public int minBet = 10;
     public int maxBet = 500;
     
-    public TextMeshProUGUI chipsText;
+    public TextMeshProUGUI moneyText;
     public TextMeshProUGUI betText;
     
     private void Start()
@@ -20,18 +20,18 @@ public class BlackjackBettingSystem : MonoBehaviour
     {
         if (amount < minBet || amount > maxBet)
         {
-            Debug.Log("Bet must be between " + minBet + " and " + maxBet);
+            Debug.Log("Bet must be between $" + minBet + " and $" + maxBet);
             return false;
         }
         
-        if (amount > playerChips)
+        if (amount > playerMoney)
         {
-            Debug.Log("Not enough chips!");
+            Debug.Log("Not enough money!");
             return false;
         }
         
         currentBet = amount;
-        playerChips -= amount;
+        playerMoney -= amount;
         UpdateUI();
         return true;
     }
@@ -39,7 +39,7 @@ public class BlackjackBettingSystem : MonoBehaviour
     public void WinBet(float multiplier = 2f)
     {
         int winnings = Mathf.RoundToInt(currentBet * multiplier);
-        playerChips += winnings;
+        playerMoney += winnings;
         currentBet = 0;
         UpdateUI();
     }
@@ -52,37 +52,47 @@ public class BlackjackBettingSystem : MonoBehaviour
     
     public void PushBet()
     {
-        playerChips += currentBet;
+        playerMoney += currentBet;
         currentBet = 0;
         UpdateUI();
     }
     
-    public void IncreaseBet(int amount)
+    public void AddToBet10()
     {
-        int newBet = currentBet + amount;
-        if (newBet <= playerChips && newBet <= maxBet)
-        {
-            currentBet = newBet;
-            UpdateUI();
-        }
+        AddToBetInput(10);
     }
     
-    public void DecreaseBet(int amount)
+    public void AddToBet50()
     {
-        int newBet = currentBet - amount;
-        if (newBet >= minBet)
+        AddToBetInput(50);
+    }
+    
+    public void AddToBet100()
+    {
+        AddToBetInput(100);
+    }
+    
+    private void AddToBetInput(int amount)
+    {
+        TMP_InputField betInputField = FindObjectOfType<TMP_InputField>();
+        if (betInputField != null)
         {
-            currentBet = newBet;
-            UpdateUI();
+            int currentValue = 0;
+            int.TryParse(betInputField.text, out currentValue);
+            betInputField.text = (currentValue + amount).ToString();
         }
     }
     
     private void UpdateUI()
     {
-        if (chipsText != null)
-            chipsText.text = "Chips: $" + playerChips;
+        if (moneyText != null)
+            moneyText.text = "Money: $" + playerMoney.ToString();
+        else
+            Debug.LogWarning("MoneyText is not assigned!");
         
         if (betText != null)
-            betText.text = "Bet: $" + currentBet;
+            betText.text = "Current Bet: $" + currentBet.ToString();
+        else
+            Debug.LogWarning("BetText is not assigned!");
     }
 }

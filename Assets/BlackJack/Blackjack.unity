@@ -217,6 +217,8 @@ RectTransform:
   - {fileID: 252711417}
   - {fileID: 137298981}
   - {fileID: 80802167}
+  - {fileID: 1736022414}
+  - {fileID: 925031634}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -393,8 +395,6 @@ RectTransform:
   m_Children:
   - {fileID: 1443167612}
   - {fileID: 1379335798}
-  - {fileID: 1736022414}
-  - {fileID: 925031634}
   m_Father: {fileID: 33640230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -890,6 +890,7 @@ MonoBehaviour:
   cardParent: {fileID: 503681877}
   cardStartPosition: {x: 0, y: 0.1, z: -3}
   cardOffset: {x: 1.5, y: 0, z: 0}
+  cardRotation: {x: 90, y: 0, z: 0}
 --- !u!4 &503681877
 Transform:
   m_ObjectHideFlags: 0
@@ -1120,17 +1121,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 925031633}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 245580708}
-  m_Father: {fileID: 137298981}
+  m_Father: {fileID: 33640230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 261, y: -312}
+  m_AnchoredPosition: {x: 261, y: -496.91098}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &925031635
@@ -2040,17 +2041,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1736022413}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1862902546}
-  m_Father: {fileID: 137298981}
+  m_Father: {fileID: 33640230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 83, y: -313}
+  m_AnchoredPosition: {x: 83, y: -497.91098}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1736022415
@@ -2180,6 +2181,7 @@ MonoBehaviour:
   cardParent: {fileID: 1861989518}
   cardStartPosition: {x: 0, y: 0.1, z: 3}
   cardOffset: {x: 1.5, y: 0, z: 0}
+  cardRotation: {x: 90, y: 0, z: 0}
 --- !u!4 &1861989518
 Transform:
   m_ObjectHideFlags: 0
