@@ -6,11 +6,12 @@ using System.Collections.Generic;
 public class PachinkoMachine : MonoBehaviour
 {
     [Header("Spawn Settings")]
-    [SerializeField] private BoxCollider spawnZone; // The box collider at the top
-    [SerializeField] private float spawnHeight = 0.5f; // Height above spawn zone to drop from
+    [SerializeField] private BoxCollider spawnZone;
+    [SerializeField] private float spawnHeight = 0.5f;
 
     [Header("Machine Settings")]
-    [SerializeField] private float baseBetAmount = 10f;
+    [SerializeField] private float minBetAmount = 1f;
+    [SerializeField] private float maxBetAmount = 1000f;
 
     [Header("References")]
     [SerializeField] private GameObject ballPrefab;
@@ -19,27 +20,33 @@ public class PachinkoMachine : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private TMP_Text balanceText;
-    [SerializeField] private TMP_Text betAmountText;
+    [SerializeField] private TMP_InputField betInputField; // Changed to input field
     [SerializeField] private Button dropBallButton;
-    [SerializeField] private Button increaseBetButton;
-    [SerializeField] private Button decreaseBetButton;
+    [SerializeField] private Button maxBetButton; // Optional: set bet to max affordable
 
     [Header("Ball Pool")]
     [SerializeField] private int poolSize = 10;
 
     private Queue<GameObject> ballPool = new Queue<GameObject>();
     private float currentBetAmount;
-    private float playerBalance = 1000f; // Connect this to your main balance system
+    private float playerBalance = 1000f;
 
     void Start()
     {
         InitializeBallPool();
-        currentBetAmount = baseBetAmount;
+        currentBetAmount = minBetAmount;
 
         // Setup UI listeners
         if (dropBallButton) dropBallButton.onClick.AddListener(DropBall);
-        if (increaseBetButton) increaseBetButton.onClick.AddListener(IncreaseBet);
-        if (decreaseBetButton) decreaseBetButton.onClick.AddListener(DecreaseBet);
+        if (maxBetButton) maxBetButton.onClick.AddListener(SetMaxBet);
+
+        // Setup input field listener
+        if (betInputField)
+        {
+            betInputField.onEndEdit.AddListener(OnBetInputChanged);
+            betInputField.contentType = TMP_InputField.ContentType.DecimalNumber;
+            betInputField.text = currentBetAmount.ToString("F0");
+        }
 
         // Register all scoring zones with this machine
         foreach (var zone in scoringZones)
@@ -88,6 +95,34 @@ public class PachinkoMachine : MonoBehaviour
         ballPool.Enqueue(ball);
     }
 
+    void OnBetInputChanged(string input)
+    {
+        // Try to parse the input
+        if (float.TryParse(input, out float betAmount))
+        {
+            // Clamp between min and max
+            betAmount = Mathf.Clamp(betAmount, minBetAmount, maxBetAmount);
+
+            // Don't allow betting more than balance
+            betAmount = Mathf.Min(betAmount, playerBalance);
+
+            currentBetAmount = betAmount;
+        }
+        else
+        {
+            // If invalid input, reset to current bet amount
+            currentBetAmount = Mathf.Max(minBetAmount, currentBetAmount);
+        }
+
+        UpdateUI();
+    }
+
+    void SetMaxBet()
+    {
+        currentBetAmount = Mathf.Min(maxBetAmount, playerBalance);
+        UpdateUI();
+    }
+
     public void DropBall()
     {
         if (playerBalance < currentBetAmount)
@@ -131,10 +166,7 @@ public class PachinkoMachine : MonoBehaviour
             return transform.position;
         }
 
-        // Get bounds of the spawn zone
         Bounds bounds = spawnZone.bounds;
-
-        // Random position within X and Z, above the spawn zone
         float randomX = Random.Range(bounds.min.x, bounds.max.x);
         float randomZ = Random.Range(bounds.min.z, bounds.max.z);
         float spawnY = bounds.max.y + spawnHeight;
@@ -151,24 +183,19 @@ public class PachinkoMachine : MonoBehaviour
         Debug.Log($"Ball landed! Multiplier: {multiplier}x, Won: ${winAmount:F2}");
     }
 
-    void IncreaseBet()
-    {
-        currentBetAmount += baseBetAmount;
-        currentBetAmount = Mathf.Min(currentBetAmount, playerBalance);
-        UpdateUI();
-    }
-
-    void DecreaseBet()
-    {
-        currentBetAmount -= baseBetAmount;
-        currentBetAmount = Mathf.Max(currentBetAmount, baseBetAmount);
-        UpdateUI();
-    }
-
     void UpdateUI()
     {
-        if (balanceText) balanceText.text = $"Balance: ${playerBalance:F2}";
-        if (betAmountText) betAmountText.text = $"Bet: ${currentBetAmount:F2}";
+        if (balanceText)
+            balanceText.text = $"Balance: ${playerBalance:F2}";
+
+        if (betInputField)
+        {
+            // Only update if not currently editing
+            if (!betInputField.isFocused)
+            {
+                betInputField.text = currentBetAmount.ToString("F0");
+            }
+        }
     }
 
     // Public methods to connect your game's balance system
