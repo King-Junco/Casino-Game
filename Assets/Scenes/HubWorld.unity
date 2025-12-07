@@ -185,7 +185,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ff9e3fe7a821e1a42ad09601c01e5aa4, type: 2}
+  - {fileID: 2100000, guid: 928eba16c6f12b143a8aa89360a29550, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -584,6 +584,14 @@ PrefabInstance:
     - target: {fileID: 4014537392693899356, guid: 5c5ec72de85fe5b40a268d5d148a7ac2, type: 3}
       propertyPath: m_Name
       value: SapphiArtchan
+      objectReference: {fileID: 0}
+    - target: {fileID: 5847592678277267687, guid: 5c5ec72de85fe5b40a268d5d148a7ac2, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 45a270fdc4f57a14cb640f4b7d7439c0, type: 2}
+    - target: {fileID: 8032341170352090462, guid: 5c5ec72de85fe5b40a268d5d148a7ac2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
