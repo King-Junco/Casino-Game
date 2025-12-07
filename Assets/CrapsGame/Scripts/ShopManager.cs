@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 public class ShopManager : MonoBehaviour
@@ -23,11 +24,30 @@ public class ShopManager : MonoBehaviour
 
     [Tooltip("Text element (on a button or label) to display rolls left.")]
     public TextMeshProUGUI rollsLeftText;
-    [Tooltip("Text element to display cost for unlocking the next die.")]
-    public TextMeshProUGUI buyCostText;
     [SerializeField] public TextMeshProUGUI errorText;
     [SerializeField] public TextMeshProUGUI confirmationText;
 
+    [Header("Betting System")]
+    [Tooltip("Bet amount input field for custom bet multiplier.")]
+    public TMP_InputField betAmountInput;
+
+    [Tooltip("Current bet multiplier.")]
+    private float currentBetMultiplier = 1.5f;
+
+    [Tooltip("Current bet amount (stored when rolling).")]
+    private float currentBetAmount = 0f;
+
+    [Tooltip("Toggle for tier 2-4 (low).")]
+    public Toggle tierLowToggle;
+
+    [Tooltip("Toggle for tier 5-9 (mid).")]
+    public Toggle tierMidToggle;
+
+    [Tooltip("Toggle for tier 10-12 (high).")]
+    public Toggle tierHighToggle;
+
+    [Tooltip("Current selected tier (0=none, 1=low 2-4, 2=mid 5-9, 3=high 10-12).")]
+    private int currentTier = 0;
 
     [Header("Buttons (optional)")]
     [Tooltip("Optional reference to the Roll UI Button so ShopManager can auto-wire the click and enable/disable it.")]
@@ -35,12 +55,6 @@ public class ShopManager : MonoBehaviour
 
     [Tooltip("Optional reference to the Payout UI Button so ShopManager can auto-wire the click and enable/disable it.")]
     public Button payoutButton;
-    public Button purchaseUpgradeButton;
-
-    [Tooltip("If true, the shop will automatically apply last payout to balance when a payout event arrives.")]
-    public bool autoApplyPayouts = true;
-    [Tooltip("Optional Buy button to purchase/unlock another die.")]
-    public Button buyButton;
 
     [Header("Upgrade UI (optional)")]
     [Tooltip("Dropdown where player selects the die to upgrade (1-6). Displayed values are 1-6, underlying index is 0-based.")]
@@ -51,6 +65,23 @@ public class ShopManager : MonoBehaviour
 
     [Tooltip("Button to purchase an upgrade for the entered die index.")]
     public Button upgradeButton;
+
+    [Header("Purchase Rolls")]
+    [Tooltip("Button to purchase additional rolls.")]
+    public Button purchaseRollsButton;
+
+    [Tooltip("Text to display cost of next roll purchase.")]
+    public TextMeshProUGUI purchaseRollsCostText;
+
+    [Header("Upgrade System")]
+    [Tooltip("Dictionary tracking rolls remaining for each upgraded die.")]
+    private Dictionary<int, int> upgradeRollsRemaining = new Dictionary<int, int>();
+
+    [Tooltip("Base cost to purchase a roll.")]
+    [SerializeField] private int baseRollCost = 5;
+    [Tooltip("Scaling factor for roll purchase costs.")]
+    [SerializeField] private float rollCostScale = 1.5f;
+    private int rollsPurchased = 0;
 
 
     private void OnEnable()
@@ -63,7 +94,8 @@ public class ShopManager : MonoBehaviour
         // auto-update UI immediately when enabled
         UpdateBalanceDisplay();
         if (diceManager != null) UpdateRollsLeftDisplay(diceManager.GetRollsLeft());
-        UpdateBuyDisplay();
+        UpdateBetDisplay();
+        UpdatePurchaseRollsDisplay();
         UpdateUpgradeDisplay();
     }
 
@@ -81,6 +113,12 @@ public class ShopManager : MonoBehaviour
             payoutButton.onClick.RemoveListener(OnPayoutButtonPressed);
         if (upgradeIndexDropdown != null)
             upgradeIndexDropdown.onValueChanged.RemoveAllListeners();
+        if (tierLowToggle != null)
+            tierLowToggle.onValueChanged.RemoveListener(OnTierLowToggled);
+        if (tierMidToggle != null)
+            tierMidToggle.onValueChanged.RemoveListener(OnTierMidToggled);
+        if (tierHighToggle != null)
+            tierHighToggle.onValueChanged.RemoveListener(OnTierHighToggled);
     }
 
     private void OnPayoutCalculated(int payout, int sum)
@@ -92,14 +130,12 @@ public class ShopManager : MonoBehaviour
         if (rollButton != null && diceManager != null)
             rollButton.interactable = diceManager.CanRoll();
 
-        // update payout button state: enable if there's an unapplied payout and autoApply is off
         if (payoutButton != null && diceManager != null)
         {
-            bool hasUnapplied = diceManager.GetLastPayout() > 0 && !autoApplyPayouts;
-            payoutButton.interactable = hasUnapplied;
+            payoutButton.interactable = true;
         }
 
-        UpdateBuyDisplay();
+        UpdatePurchaseRollsDisplay();
     }
 
     private void UpdateBalanceDisplay()
@@ -119,18 +155,26 @@ public class ShopManager : MonoBehaviour
         rollsLeftText.text = $"Rolls: {newLeft}";
         if (rollButton != null)
             rollButton.interactable = newLeft > 0;
-        UpdateBuyDisplay();
+        UpdatePurchaseRollsDisplay();
     }
 
-    private void UpdateBuyDisplay()
+    private void UpdateBetDisplay()
     {
-        if (buyCostText == null || diceManager == null) return;
-        int cost = diceManager.GetNextDiceCost();
-        buyCostText.text = $"Buy Die: {cost}";
+        // Update bet multiplier input field
+        if (betAmountInput != null)
+        {
+            betAmountInput.text = currentBetMultiplier.ToString("F2");
+        }
+    }
 
-        if (buyButton != null)
-            buyButton.interactable = diceManager.GetPlayerBalance() >= cost;
-        UpdateUpgradeDisplay();
+    private void UpdatePurchaseRollsDisplay()
+    {
+        if (purchaseRollsCostText == null || diceManager == null) return;
+        int cost = GetRollPurchaseCost();
+        purchaseRollsCostText.text = $"Buy Rolls: {cost}";
+
+        if (purchaseRollsButton != null)
+            purchaseRollsButton.interactable = diceManager.GetPlayerBalance() >= cost;
     }
 
     private void UpdateUpgradeDisplay()
@@ -161,9 +205,36 @@ public class ShopManager : MonoBehaviour
     {
         Debug.Log("ShopManager: OnRollButtonPressed called");
         if (diceManager == null) return;
+        
+        // Check if a tier is selected
+        if (currentTier == 0)
+        {
+            showError("Please select a betting tier before rolling!");
+            return;
+        }
+        
+        // Check if player has enough balance to make the bet
+        int betAmount = Mathf.RoundToInt(currentBetMultiplier);
+        if (diceManager.GetPlayerBalance() < betAmount)
+        {
+            showError($"Insufficient balance to place bet of {betAmount}! You have {diceManager.GetPlayerBalance()}.");
+            return;
+        }
+        
+        // Store the bet amount (don't deduct yet - deduct on payout)
+        currentBetAmount = currentBetMultiplier;
+        Debug.Log($"OnRollButtonPressed: Bet amount stored: {currentBetAmount}. currentTier={currentTier}");
+        
         diceManager.RollAll();
+        // Hide betting UI but keep balance visible
+        Button1.SetActive(false);
+        Button2.SetActive(false);
+        Button3.SetActive(false);
+        purchaseRollsButton.gameObject.SetActive(false);
+        dicePrice.gameObject.SetActive(false);
         // disable roll button right away to avoid duplicate clicks
         if (rollButton != null) rollButton.interactable = false;
+        
         // refresh display immediately
         UpdateRollsLeftDisplay(diceManager.GetRollsLeft());
     }
@@ -173,37 +244,69 @@ public class ShopManager : MonoBehaviour
     {
         Debug.Log("ShopManager: OnPayoutButtonPressed called");
         if (diceManager == null) return;
-        int payout = diceManager.GetLastPayout();
-        if (payout <= 0)
-        {
-            showError("No payout available to apply.");
-            // ensure button disabled to reflect no payout
-            if (payoutButton != null) payoutButton.interactable = false;
-            return;
-        }
 
+        // Deduct the bet from balance (now, when payout is applied)
+        int betAmount = Mathf.RoundToInt(currentBetAmount);
+        diceManager.DeductBalance(betAmount);
+        Debug.Log($"OnPayoutButtonPressed: Bet {betAmount} deducted. Balance after deduction: {diceManager.GetPlayerBalance()}");
+        
+        // Apply the payout
+        int payoutToApply = diceManager.GetLastPayout();
+        Debug.Log($"OnPayoutButtonPressed: About to apply payout of {payoutToApply}");
         diceManager.ApplyLastPayout();
+        Debug.Log($"OnPayoutButtonPressed: After ApplyLastPayout, balance is {diceManager.GetPlayerBalance()}");
         UpdateBalanceDisplay();
-        // after applying, disable payout button
         if (payoutButton != null) payoutButton.interactable = false;
-        UpdateBuyDisplay();
+        shopPanel.SetActive(true);
+        Button1.SetActive(true);
+        Button2.SetActive(true);
+        Button3.SetActive(true);
+        purchaseRollsButton.gameObject.SetActive(true);
+        dicePrice.gameObject.SetActive(true);
+        UpdatePurchaseRollsDisplay();
     }
 
-    // Called by UI buy button
-    public void OnBuyButtonPressed()
+    // Called by UI buy button - REMOVED (no longer purchasing dice)
+    // Betting tier toggle handlers
+    private void OnTierLowToggled(bool isOn)
     {
-        if (diceManager == null) return;
-        int cost = diceManager.GetNextDiceCost();
-        bool ok = diceManager.TryPurchaseUnlockDice();
-        if (ok)
+        if (isOn)
         {
-            showConfirmation($"Purchased new die for {cost}!");
-            UpdateBalanceDisplay();
-            UpdateBuyDisplay();
+            currentTier = 1; // tier 2-4
+            if (tierMidToggle != null) tierMidToggle.SetIsOnWithoutNotify(false);
+            if (tierHighToggle != null) tierHighToggle.SetIsOnWithoutNotify(false);
         }
-        else
+        else if (currentTier == 1)
         {
-            showError($"Cannot purchase new die for {cost} — insufficient funds or all dice unlocked.");
+            currentTier = 0;
+        }
+    }
+
+    private void OnTierMidToggled(bool isOn)
+    {
+        if (isOn)
+        {
+            currentTier = 2; // tier 5-9
+            if (tierLowToggle != null) tierLowToggle.SetIsOnWithoutNotify(false);
+            if (tierHighToggle != null) tierHighToggle.SetIsOnWithoutNotify(false);
+        }
+        else if (currentTier == 2)
+        {
+            currentTier = 0;
+        }
+    }
+
+    private void OnTierHighToggled(bool isOn)
+    {
+        if (isOn)
+        {
+            currentTier = 3; // tier 10-12
+            if (tierLowToggle != null) tierLowToggle.SetIsOnWithoutNotify(false);
+            if (tierMidToggle != null) tierMidToggle.SetIsOnWithoutNotify(false);
+        }
+        else if (currentTier == 3)
+        {
+            currentTier = 0;
         }
     }
 
@@ -212,10 +315,8 @@ public class ShopManager : MonoBehaviour
         // auto-wire button listeners if buttons were assigned but not hooked in the inspector
         if (rollButton != null)
         {
-            // ensure listener is not double-added
             rollButton.onClick.RemoveListener(OnRollButtonPressed);
             rollButton.onClick.AddListener(OnRollButtonPressed);
-            // initial interactable state
             if (diceManager != null) rollButton.interactable = diceManager.CanRoll();
         }
 
@@ -223,8 +324,6 @@ public class ShopManager : MonoBehaviour
         {
             payoutButton.onClick.RemoveListener(OnPayoutButtonPressed);
             payoutButton.onClick.AddListener(OnPayoutButtonPressed);
-            // initial state: enable if there's a payout available
-            if (diceManager != null) payoutButton.interactable = (diceManager.GetLastPayout() > 0 && !autoApplyPayouts);
         }
 
         if (upgradeButton != null)
@@ -236,7 +335,6 @@ public class ShopManager : MonoBehaviour
         // Populate the upgrade dropdown (1-6) and wire change listener to refresh UI
         if (upgradeIndexDropdown != null)
         {
-            // Ensure options 1..6 are present
             if (upgradeIndexDropdown.options == null || upgradeIndexDropdown.options.Count != 6)
             {
                 upgradeIndexDropdown.ClearOptions();
@@ -248,6 +346,42 @@ public class ShopManager : MonoBehaviour
             upgradeIndexDropdown.onValueChanged.RemoveAllListeners();
             upgradeIndexDropdown.onValueChanged.AddListener((int v) => UpdateUpgradeDisplay());
         }
+
+        // Wire up tier betting toggles
+        if (tierLowToggle != null)
+        {
+            tierLowToggle.onValueChanged.RemoveListener(OnTierLowToggled);
+            tierLowToggle.onValueChanged.AddListener(OnTierLowToggled);
+        }
+
+        if (tierMidToggle != null)
+        {
+            tierMidToggle.onValueChanged.RemoveListener(OnTierMidToggled);
+            tierMidToggle.onValueChanged.AddListener(OnTierMidToggled);
+        }
+
+        if (tierHighToggle != null)
+        {
+            tierHighToggle.onValueChanged.RemoveListener(OnTierHighToggled);
+            tierHighToggle.onValueChanged.AddListener(OnTierHighToggled);
+        }
+
+        // Wire purchase rolls button
+        if (purchaseRollsButton != null)
+        {
+            purchaseRollsButton.onClick.RemoveListener(OnPurchaseRollsPressed);
+            purchaseRollsButton.onClick.AddListener(OnPurchaseRollsPressed);
+        }
+
+        // Wire bet input field
+        if (betAmountInput != null)
+        {
+            betAmountInput.onEndEdit.RemoveListener(OnBetMultiplierChanged);
+            betAmountInput.onEndEdit.AddListener(OnBetMultiplierChanged);
+        }
+
+        UpdateBetDisplay();
+        UpdatePurchaseRollsDisplay();
     }
 
     // Called by UI upgrade button
@@ -259,21 +393,151 @@ public class ShopManager : MonoBehaviour
         int index = 0;
         if (upgradeIndexDropdown != null)
         {
-            index = upgradeIndexDropdown.value; // zero-based
+            index = upgradeIndexDropdown.value;
         }
 
         int cost = diceManager.GetUpgradeCost(index);
         bool ok = diceManager.TryPurchaseUpgradeDie(index);
         if (ok)
         {
-            showConfirmation($"Upgraded die {index} for {cost}!");
+            // Mark the upgraded die with 3 rolls remaining
+            upgradeRollsRemaining[index] = 3;
+            
+            showConfirmation($"Upgraded die {index + 1} for {cost}! (3 rolls)");
             UpdateBalanceDisplay();
             UpdateUpgradeDisplay();
-            UpdateBuyDisplay();
+            UpdatePurchaseRollsDisplay();
         }
         else
         {
-            showError($"Cannot upgrade die {index} for {cost} — insufficient funds or invalid die.");
+            showError($"Cannot upgrade die {index + 1} for {cost}!");
+        }
+    }
+
+    // Purchase rolls button handler
+    public void OnPurchaseRollsPressed()
+    {
+        if (diceManager == null) return;
+        int cost = GetRollPurchaseCost();
+        if (diceManager.GetPlayerBalance() < cost)
+        {
+            showError($"Insufficient funds to purchase rolls. Need {cost}");
+            return;
+        }
+
+        diceManager.adjustPlayerBalance(-cost);
+        diceManager.AddRolls(1);
+        rollsPurchased++;
+        
+        showConfirmation($"Purchased 1 roll for {cost}!");
+        UpdateBalanceDisplay();
+        UpdatePurchaseRollsDisplay();
+    }
+
+    // Bet multiplier input field handler
+    public void OnBetMultiplierChanged(string value)
+    {
+        if (float.TryParse(value, out float multiplier) && multiplier > 0)
+        {
+            currentBetMultiplier = multiplier;
+        }
+        else
+        {
+            // Reset to previous valid multiplier
+            UpdateBetDisplay();
+        }
+    }
+
+    // Check if a tier is currently selected (for validation)
+    public bool IsTierSelected()
+    {
+        Debug.Log("IsTierSelected: " + (currentTier != 0));
+        return currentTier != 0;
+    }
+
+    // Calculate payout based on dice sum, current tier selection, and current bet
+    public int CalculatePayout(int sum)
+    {
+        Debug.Log($"=== CalculatePayout START ===");
+        Debug.Log($"  currentBetAmount={currentBetAmount}, currentTier={currentTier}, sum={sum}");
+        
+        // Determine tier multiplier based on sum
+        float tierMultiplier = 0f;
+        
+        if (currentTier == 1 && sum >= 2 && sum <= 4)
+        {
+            tierMultiplier = 2f; // Low tier: 2x bet
+            showConfirmation($"TIER 1 WIN!");
+        }
+        else if (currentTier == 2 && sum >= 5 && sum <= 9)
+        {
+            tierMultiplier = 1.5f; // Mid tier: 1.5x bet
+            showConfirmation($"TIER 2 WIN!");
+        }
+        else if (currentTier == 3 && sum >= 10 && sum <= 12)
+        {
+            tierMultiplier = 2f; // High tier: 2x bet
+            showConfirmation($"TIER 3 WIN!");
+        }
+        else
+        {
+            showError($"LOSS.");
+        }
+        // If tier not selected or sum doesn't match, tierMultiplier stays 0
+
+        // Payout = bet amount * tier multiplier
+        int payout = Mathf.RoundToInt(currentBetAmount * tierMultiplier);
+        
+        // Apply upgrade bonuses (2x per upgraded die that still has rolls remaining)
+        if (diceManager != null && tierMultiplier > 0)
+        {
+            bool[] lastUpgraded = diceManager.GetLastUpgraded();
+            float upgradeMultiplier = 1f;
+            for (int i = 0; i < lastUpgraded.Length; i++)
+            {
+                if (lastUpgraded[i] && upgradeRollsRemaining.ContainsKey(i) && upgradeRollsRemaining[i] > 0)
+                {
+                    upgradeMultiplier *= 2f;
+                }
+            }
+            payout = Mathf.RoundToInt(payout * upgradeMultiplier);
+            Debug.Log($"  Upgrade multiplier: {upgradeMultiplier}, payout after upgrades: {payout}");
+        }
+        
+        Debug.Log($"  Final payout: {currentBetAmount} * {tierMultiplier} = {payout}");
+        Debug.Log($"=== CalculatePayout END ===");
+        
+        // Decrement upgrade roll counters after this roll
+        DecrementUpgradeRolls();
+        
+        return payout;
+    }
+
+    // Get cost for next roll purchase
+    private int GetRollPurchaseCost()
+    {
+        float cost = baseRollCost * Mathf.Pow(rollCostScale, rollsPurchased);
+        return Mathf.CeilToInt(cost);
+    }
+
+    // Decrement upgrade roll counters after each roll
+    private void DecrementUpgradeRolls()
+    {
+        List<int> keysToRemove = new List<int>();
+        List<int> keysToUpdate = new List<int>(upgradeRollsRemaining.Keys);
+        
+        foreach (var key in keysToUpdate)
+        {
+            upgradeRollsRemaining[key]--;
+            if (upgradeRollsRemaining[key] <= 0)
+            {
+                keysToRemove.Add(key);
+            }
+        }
+
+        foreach (var key in keysToRemove)
+        {
+            upgradeRollsRemaining.Remove(key);
         }
     }
 
@@ -284,6 +548,7 @@ public class ShopManager : MonoBehaviour
         Button1.SetActive(isOpen);
         Button2.SetActive(isOpen);
         Button3.SetActive(isOpen);
+        purchaseRollsButton.gameObject.SetActive(isOpen);
         dicePrice.gameObject.SetActive(isOpen);
 
         if (isOpen)
@@ -299,35 +564,56 @@ public class ShopManager : MonoBehaviour
         int playerBalance = diceManager.GetPlayerBalance();
         if (playerBalance >= cost) {
             diceManager.adjustPlayerBalance(-cost);
-            diceManager.rollsPerReset += 1;
+            diceManager.AddRolls(1);
             UpdateBalanceDisplay();
         }
-
     }
     public void showError(string message)
     {
+        StartCoroutine(FadeOutError(message));
+    }
+
+    private IEnumerator FadeOutError(string message)
+    {
         errorText.gameObject.SetActive(true);
         errorText.text = message;
-        while (errorText.alpha > 0)
-        {
-            errorText.alpha -= Time.deltaTime;
-        }
-        errorText.gameObject.SetActive(false);
-        errorText.alpha = 1;
+        errorText.alpha = 1f;
+        float duration = 3f; // fade over 3 seconds
+        float elapsed = 0f;
 
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            errorText.alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
+            yield return null;
+        }
+
+        errorText.alpha = 0f;
+        errorText.gameObject.SetActive(false);
     }
 
     public void showConfirmation(string message)
     {
+        StartCoroutine(FadeOutConfirmation(message));
+    }
+
+    private IEnumerator FadeOutConfirmation(string message)
+    {
         confirmationText.gameObject.SetActive(true);
         confirmationText.text = message;
-        while (confirmationText.alpha > 0)
-        {
-            confirmationText.alpha -= Time.deltaTime;
-        }
-        confirmationText.gameObject.SetActive(false);
-        confirmationText.alpha = 1;
+        confirmationText.alpha = 1f;
+        float duration = 3f; // fade over 3 seconds
+        float elapsed = 0f;
 
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            confirmationText.alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
+            yield return null;
+        }
+
+        confirmationText.alpha = 0f;
+        confirmationText.gameObject.SetActive(false);
     }
 }
 
