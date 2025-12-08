@@ -125,6 +125,17 @@ public class RaceManager : MonoBehaviour
             horse.StopRacing();
         }
 
+        // STOP ONLY HORSE GALLOP SOUNDS
+        GameObject[] horseAudioObjects = GameObject.FindGameObjectsWithTag("HorseAudio");
+        foreach (GameObject obj in horseAudioObjects)
+        {
+            AudioSource audio = obj.GetComponent<AudioSource>();
+            if (audio != null && audio.isPlaying)
+            {
+                audio.Stop();
+            }
+        }
+
         UpdateStatusText($"{winner.GetHorseName()} wins!");
 
         // Process betting results
