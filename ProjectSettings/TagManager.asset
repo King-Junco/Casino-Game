@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - FinishLine
+  - PachinkoPin
   layers:
   - Default
   - TransparentFX

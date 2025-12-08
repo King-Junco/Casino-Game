@@ -82,10 +82,15 @@ public class PortalGate : MonoBehaviour
     {
         isTransitioning = true;
 
-        // Wait for the specified delay
+        // DISABLE PLAYER CONTROLS BEFORE TRANSITION
+        DisablePlayerControls();
+
+        // Unlock and show cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         yield return new WaitForSeconds(transitionDelay);
 
-        // Load the new scene
         if (!string.IsNullOrEmpty(sceneToLoad))
         {
             SceneManager.LoadScene(sceneToLoad);
@@ -93,6 +98,27 @@ public class PortalGate : MonoBehaviour
         else
         {
             Debug.LogError("Scene name is not set in the Portal!");
+        }
+    }
+
+    private void DisablePlayerControls()
+    {
+        if (playerTransform != null)
+        {
+            // Disable CharacterController
+            CharacterController cc = playerTransform.GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
+
+            // Disable all MonoBehaviour scripts on player (controller scripts)
+            MonoBehaviour[] scripts = playerTransform.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scripts)
+            {
+                // Don't disable this portal script
+                if (script != this)
+                {
+                    script.enabled = false;
+                }
+            }
         }
     }
 
