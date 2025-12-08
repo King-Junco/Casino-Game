@@ -111,8 +111,6 @@ public class ShopManager : MonoBehaviour
             rollButton.onClick.RemoveListener(OnRollButtonPressed);
         if (payoutButton != null)
             payoutButton.onClick.RemoveListener(OnPayoutButtonPressed);
-        if (upgradeIndexDropdown != null)
-            upgradeIndexDropdown.onValueChanged.RemoveAllListeners();
         if (tierLowToggle != null)
             tierLowToggle.onValueChanged.RemoveListener(OnTierLowToggled);
         if (tierMidToggle != null)
@@ -180,23 +178,47 @@ public class ShopManager : MonoBehaviour
     private void UpdateUpgradeDisplay()
     {
         if (diceManager == null) return;
-        int index = 0;
-        if (upgradeIndexDropdown != null)
+        
+        // Find the next die to upgrade using CURRENT upgrade status (not from last roll)
+        int indexToUpgrade = -1;
+        bool[] currentUpgraded = diceManager.GetCurrentUpgraded();
+        
+        // Check first 2 dice (or however many exist)
+        for (int i = 0; i < currentUpgraded.Length && i < 2; i++)
         {
-            index = upgradeIndexDropdown.value; // zero-based
+            if (currentUpgraded[i] == false)
+            {
+                indexToUpgrade = i;
+                break;
+            }
         }
 
         if (upgradeCostText != null)
         {
-            int cost = diceManager.GetUpgradeCost(index);
-            upgradeCostText.text = $"Upgrade (die {index + 1}): {cost}";
+            if (indexToUpgrade == -1)
+            {
+                upgradeCostText.text = "All dice upgraded!";
+            }
+            else
+            {
+                int cost = diceManager.GetUpgradeCost(indexToUpgrade);
+                upgradeCostText.text = $"Upgrade die {indexToUpgrade + 1}: {cost}";
+            }
         }
 
         if (upgradeButton != null)
         {
-            int cost = diceManager.GetUpgradeCost(index);
-            int facesLen = (diceManager != null ? diceManager.GetLastFaces().Length : 0);
-            upgradeButton.interactable = diceManager.GetPlayerBalance() >= cost && index >= 0 && index < facesLen;
+            if (indexToUpgrade == -1)
+            {
+                upgradeButton.interactable = false;
+            }
+            else
+            {
+                int cost = diceManager.GetUpgradeCost(indexToUpgrade);
+                bool canAfford = diceManager.GetPlayerBalance() >= cost;
+                Debug.Log($"UpdateUpgradeDisplay: indexToUpgrade={indexToUpgrade}, cost={cost}, balance={diceManager.GetPlayerBalance()}, canAfford={canAfford}");
+                upgradeButton.interactable = canAfford;
+            }
         }
     }
 
@@ -332,21 +354,6 @@ public class ShopManager : MonoBehaviour
             upgradeButton.onClick.AddListener(OnUpgradeButtonPressed);
         }
 
-        // Populate the upgrade dropdown (1-6) and wire change listener to refresh UI
-        if (upgradeIndexDropdown != null)
-        {
-            if (upgradeIndexDropdown.options == null || upgradeIndexDropdown.options.Count != 6)
-            {
-                upgradeIndexDropdown.ClearOptions();
-                List<string> opts = new List<string>();
-                for (int i = 1; i <= 6; i++) opts.Add(i.ToString());
-                upgradeIndexDropdown.AddOptions(opts);
-            }
-
-            upgradeIndexDropdown.onValueChanged.RemoveAllListeners();
-            upgradeIndexDropdown.onValueChanged.AddListener((int v) => UpdateUpgradeDisplay());
-        }
-
         // Wire up tier betting toggles
         if (tierLowToggle != null)
         {
@@ -390,27 +397,42 @@ public class ShopManager : MonoBehaviour
         Debug.Log("ShopManager: OnUpgradeButtonPressed called");
         if (diceManager == null) return;
 
-        int index = 0;
-        if (upgradeIndexDropdown != null)
+        // Find the first unupgraded die and upgrade it
+        int indexToUpgrade = -1;
+        bool[] currentUpgraded = diceManager.GetCurrentUpgraded();
+        Debug.Log($"CurrentUpgraded array length: {currentUpgraded.Length}");
+        for (int i = 0; i < currentUpgraded.Length && i < 2; i++)
         {
-            index = upgradeIndexDropdown.value;
+            Debug.Log($"Die {i}: upgraded = {currentUpgraded[i]}");
+            if (currentUpgraded[i] == false)
+            {
+                indexToUpgrade = i;
+                break;
+            }
         }
 
-        int cost = diceManager.GetUpgradeCost(index);
-        bool ok = diceManager.TryPurchaseUpgradeDie(index);
+        if (indexToUpgrade == -1)
+        {
+            showError("Both dice are already upgraded!");
+            return;
+        }
+
+        int cost = diceManager.GetUpgradeCost(indexToUpgrade);
+        Debug.Log($"Attempting to upgrade die {indexToUpgrade} (die {indexToUpgrade + 1}), cost: {cost}");
+        bool ok = diceManager.TryPurchaseUpgradeDie(indexToUpgrade);
         if (ok)
         {
             // Mark the upgraded die with 3 rolls remaining
-            upgradeRollsRemaining[index] = 3;
+            upgradeRollsRemaining[indexToUpgrade] = 3;
             
-            showConfirmation($"Upgraded die {index + 1} for {cost}! (3 rolls)");
+            showConfirmation($"Upgraded die {indexToUpgrade + 1} for {cost}! (3 rolls)");
             UpdateBalanceDisplay();
             UpdateUpgradeDisplay();
             UpdatePurchaseRollsDisplay();
         }
         else
         {
-            showError($"Cannot upgrade die {index + 1} for {cost}!");
+            showError($"Cannot upgrade die {indexToUpgrade + 1} for {cost}!");
         }
     }
 

@@ -306,6 +306,18 @@ public class DiceManager : MonoBehaviour
         return (bool[])lastUpgraded.Clone();
     }
 
+    // Get current actual upgrade status of all dice (not just from last roll)
+    public bool[] GetCurrentUpgraded()
+    {
+        if (dice == null) return new bool[0];
+        bool[] current = new bool[dice.Length];
+        for (int i = 0; i < dice.Length; i++)
+        {
+            current[i] = (dice[i] != null) && dice[i].IsUpgraded;
+        }
+        return current;
+    }
+
     public int GetLastSum() => lastSum;
     public int GetLastPayout() => lastPayout;
     public int GetPlayerBalance() => playerBalance;
