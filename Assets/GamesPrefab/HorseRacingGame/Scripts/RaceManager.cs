@@ -136,6 +136,17 @@ public class RaceManager : MonoBehaviour
             }
         }
 
+        // RESUME UI MUSIC
+        GameObject[] uiAudioObjects = GameObject.FindGameObjectsWithTag("UIAudio");
+        foreach (GameObject obj in uiAudioObjects)
+        {
+            AudioSource audio = obj.GetComponent<AudioSource>();
+            if (audio != null)
+            {
+                audio.UnPause();
+            }
+        }
+
         UpdateStatusText($"{winner.GetHorseName()} wins!");
 
         // Process betting results
