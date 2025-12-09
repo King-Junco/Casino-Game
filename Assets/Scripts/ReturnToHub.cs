@@ -4,6 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class ReturnToHub : MonoBehaviour
 {
+    [SerializeField] private ExternalFileManager UniversalCurrency;
+    [SerializeField] private DiceManager diceManager;
+    [SerializeField] private BlackjackBettingSystem blackjackBettingSystem;
+    [SerializeField] private BettingSystem bettingSystem;
+    [SerializeField] private PachinkoMachine pachinkoMachine;
+
+
     [Header("Hub Scene Settings")]
     [Tooltip("Name of the hub world scene")]
     [SerializeField]
@@ -25,7 +32,7 @@ public class ReturnToHub : MonoBehaviour
         {
             returnButton.onClick.AddListener(ReturnToHubWorld);
         }
-    }
+    } 
 
     void Update()
     {
@@ -36,6 +43,16 @@ public class ReturnToHub : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(hubSceneName))
         {
+            // writing dicemanager money to external file
+            if (SceneManager.GetActiveScene().name == "Craps"){
+                UniversalCurrency.WriteToExternalFile(diceManager.getMoney());
+            } else if (SceneManager.GetActiveScene().name == "Blackjack") {
+                UniversalCurrency.WriteToExternalFile(blackjackBettingSystem.getMoney());
+            } else if (SceneManager.GetActiveScene().name == "HorseRace"){
+                UniversalCurrency.WriteToExternalFile(bettingSystem.getMoney());
+            } else if (SceneManager.GetActiveScene().name == "Pachinko"){
+                UniversalCurrency.WriteToExternalFile(pachinkoMachine.getMoney());
+            } 
             SceneManager.LoadScene(hubSceneName);
         }
         else

@@ -30,9 +30,11 @@ public class PachinkoMachine : MonoBehaviour
     private Queue<GameObject> ballPool = new Queue<GameObject>();
     private float currentBetAmount;
     private float playerBalance = 1000f;
+    [SerializeField] private ExternalFileManager universalCurrency;
 
     void Start()
     {
+        playerBalance = universalCurrency.ReadFromExternalFile();
         InitializeBallPool();
         currentBetAmount = minBetAmount;
 
@@ -208,5 +210,10 @@ public class PachinkoMachine : MonoBehaviour
     public float GetPlayerBalance()
     {
         return playerBalance;
+    }
+
+    public int getMoney()
+    {
+        return Mathf.RoundToInt(playerBalance);
     }
 }

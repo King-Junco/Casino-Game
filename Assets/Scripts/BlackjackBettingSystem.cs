@@ -10,9 +10,12 @@ public class BlackjackBettingSystem : MonoBehaviour
     
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI betText;
+
+    [SerializeField] private ExternalFileManager universalCurrency;
     
     private void Start()
     {
+        playerMoney = universalCurrency.ReadFromExternalFile();
         UpdateUI();
     }
     
@@ -94,5 +97,10 @@ public class BlackjackBettingSystem : MonoBehaviour
             betText.text = "Current Bet: $" + currentBet.ToString();
         else
             Debug.LogWarning("BetText is not assigned!");
+    }
+
+    public int getMoney()
+    {
+        return playerMoney;
     }
 }
