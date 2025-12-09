@@ -10,6 +10,7 @@ public class ReturnToHub : MonoBehaviour
     [SerializeField] private BettingSystem bettingSystem;
     [SerializeField] private PachinkoMachine pachinkoMachine;
 
+
     [Header("Hub Scene Settings")]
     [Tooltip("Name of the hub world scene")]
     [SerializeField]
@@ -51,7 +52,7 @@ public class ReturnToHub : MonoBehaviour
                 UniversalCurrency.WriteToExternalFile(bettingSystem.getMoney());
             } else if (SceneManager.GetActiveScene().name == "Pachinko"){
                 UniversalCurrency.WriteToExternalFile(pachinkoMachine.getMoney());
-            }
+            } 
             SceneManager.LoadScene(hubSceneName);
         }
         else

@@ -10,17 +10,12 @@ public class Hub : MonoBehaviour
     void Start()
     {
         currency = universalCurrency.ReadFromExternalFile();
+        currencyText.text = "Currency: $" + currency;
     }
 
     // Update is called once per frame
     void Update()
     {
-        currencyText.text = "Currency: $" + currency;
-    }
-
-    public void randomCurrency()
-    {
-        currency = UnityEngine.Random.Range(0, 10000);
-        universalCurrency.WriteToExternalFile(currency);
+        
     }
 }
