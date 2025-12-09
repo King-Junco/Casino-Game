@@ -38,7 +38,7 @@ public class DiceManager : MonoBehaviour
     [Header("Auto Apply")]
     [Tooltip("If true, the calculated payout will be added to `playerBalance` automatically.")]
     [SerializeField] private bool autoAddToBalance = false;
-    [SerializeField] private int playerBalance = 999;
+    [SerializeField] private int playerBalance;
 
     // Event raised when a payout is calculated (payout, sum)
     public event Action<int, int> OnPayoutCalculated;
@@ -88,6 +88,13 @@ public class DiceManager : MonoBehaviour
 
     // track last-upgraded flags per index for payout calculation
     private bool[] lastUpgraded;
+    [SerializeField] private ExternalFileManager universalCurrency;
+
+    void Start()
+    {
+        playerBalance = universalCurrency.ReadFromExternalFile();
+        
+    }
 
     private void OnEnable()
     {
@@ -498,5 +505,10 @@ public class DiceManager : MonoBehaviour
         lastSum = 0;
         lastPayout = 0;
         results.Clear();
+    }
+
+    public int getMoney()
+    {
+        return playerBalance;
     }
 }

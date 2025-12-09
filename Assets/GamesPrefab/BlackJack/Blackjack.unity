@@ -440,6 +440,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137298980}
   m_CullTransparentMesh: 1
+--- !u!1001 &240484105
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 800163434780320052, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_Name
+      value: ExternalFileManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.00608
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10.43421
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405135381006727740, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+--- !u!114 &240484106 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8767909441557061358, guid: 174b132d6c78a6d4892899384340a679, type: 3}
+  m_PrefabInstance: {fileID: 240484105}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fa58e8104feee468a605eda92db3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExternalFileManager
 --- !u!1 &245580707
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,12 +839,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 910be7f5d78104540aa1fa5f0a941276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlackjackBettingSystem
-  playerChips: 1000
+  playerMoney: 1000
   currentBet: 0
   minBet: 10
   maxBet: 500
-  chipsText: {fileID: 0}
+  moneyText: {fileID: 0}
   betText: {fileID: 0}
+  universalCurrency: {fileID: 240484106}
 --- !u!114 &286641853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2745,6 +2814,71 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1001 &7654255703043608227
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1166421167657579290, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_Name
+      value: ReturnToHub
+      objectReference: {fileID: 0}
+    - target: {fileID: 1565488396114836456, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: UniversalCurrency
+      value: 
+      objectReference: {fileID: 240484106}
+    - target: {fileID: 1565488396114836456, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: blackjackBettingSystem
+      value: 
+      objectReference: {fileID: 286641852}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 494.19165
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 301.36282
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101409708368144622, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab164c13348eb0d45a05a407e47c3d76, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2757,3 +2891,5 @@ SceneRoots:
   - {fileID: 1861989518}
   - {fileID: 33640230}
   - {fileID: 1327688257}
+  - {fileID: 240484105}
+  - {fileID: 7654255703043608227}
