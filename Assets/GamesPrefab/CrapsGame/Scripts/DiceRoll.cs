@@ -120,6 +120,7 @@ private void Update()
             Debug.Log("Dice Stopped");
             diceFaceNum = CurrentFace;
             Debug.Log("Dice Result: " + diceFaceNum);
+            UpdateUI();
             OnDiceStopped?.Invoke(diceFaceNum, this);
         }
     }
@@ -179,8 +180,13 @@ private void Update()
         checkTimer = 0f;
         diceFaceNum = 0;
         CurrentFace = 0;
+        UpdateUI();
     }
 
+    private void UpdateUI()
+    {
+        dicetext.text = "Dice Result: "+ diceFaceNum;
+    }
 
     private int GetTopFace()
     {

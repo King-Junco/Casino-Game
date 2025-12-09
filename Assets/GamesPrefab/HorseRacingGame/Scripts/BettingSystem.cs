@@ -28,14 +28,12 @@ public class BettingSystem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI HorseSpeedText;
     [SerializeField] private TextMeshProUGUI HorsePaceText;
     [SerializeField] private TextMeshProUGUI HorseBurstText;
-    [SerializeField] private ExternalFileManager universalCurrency;
 
 
     private bool bettingLocked = false;
 
     void Start()
     {
-        playerMoney = universalCurrency.ReadFromExternalFile();
         UpdateMoneyDisplay();
         UpdateBetDisplay();
 
@@ -249,10 +247,5 @@ public class BettingSystem : MonoBehaviour
     public Horse GetCurrentBet()
     {
         return currentBetAmount > 0 ? bettedHorse : null;
-    }
-
-    public int getMoney()
-    {
-        return Mathf.RoundToInt(playerMoney);
     }
 }
