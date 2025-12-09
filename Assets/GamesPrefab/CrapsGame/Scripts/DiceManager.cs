@@ -11,9 +11,6 @@ public class DiceManager : MonoBehaviour
     [Tooltip("Optional UI text to display aggregate results (sum and individual results).")]
     [SerializeField] private TextMeshProUGUI resultText;
 
-    [Tooltip("Optional reference to ShopManager for betting and payout calculations.")]
-    [SerializeField] private ShopManager shopManager;
-
     // track results as dice stop
     private Dictionary<DiceRoll, int> results = new Dictionary<DiceRoll, int>();
         // prevent duplicate/concurrent roll requests from consuming multiple "rolls"
@@ -38,7 +35,7 @@ public class DiceManager : MonoBehaviour
     [Header("Auto Apply")]
     [Tooltip("If true, the calculated payout will be added to `playerBalance` automatically.")]
     [SerializeField] private bool autoAddToBalance = false;
-    [SerializeField] private int playerBalance;
+    [SerializeField] private int playerBalance = 0;
 
     // Event raised when a payout is calculated (payout, sum)
     public event Action<int, int> OnPayoutCalculated;
@@ -88,13 +85,6 @@ public class DiceManager : MonoBehaviour
 
     // track last-upgraded flags per index for payout calculation
     private bool[] lastUpgraded;
-    [SerializeField] private ExternalFileManager universalCurrency;
-
-    void Start()
-    {
-        playerBalance = universalCurrency.ReadFromExternalFile();
-        
-    }
 
     private void OnEnable()
     {
@@ -191,21 +181,38 @@ public class DiceManager : MonoBehaviour
                 lastFaces[i] = v;
                 bool upgraded = d.IsUpgraded;
                 lastUpgraded[i] = upgraded;
-                sum += v;  // No upgrade multiplier applied to sum
+                float mult = upgraded ? d.UpgradeMultiplier : 1f;
+                sum += Mathf.RoundToInt(v * mult);
                 // include upgrade mark in parts for clarity
-                parts.Add(upgraded ? (v + "*") : v.ToString());
+                parts.Add(upgraded ? (v + "x" + mult) : v.ToString());
             }
 
             lastSum = sum;
 
-            // calculate payout - use ShopManager's betting system if available
+            // calculate payout
             int payout = 0;
-            if (shopManager != null)
+            if (usePerDiePayout)
             {
-                // Use betting system payout calculation
-                payout = shopManager.CalculatePayout(sum);
+                // sum per-face mapped payout (guard array length). If a die was upgraded, apply its multiplier.
+                for (int i = 0; i < lastFaces.Length; i++)
+                {
+                    int faceVal = lastFaces[i];
+                    if (perFacePayout == null || perFacePayout.Length <= faceVal || faceVal <= 0) continue;
+
+                    float mult = 1f;
+                    if (lastUpgraded != null && lastUpgraded.Length > i && lastUpgraded[i])
+                    {
+                        var d = (dice != null && dice.Length > i) ? dice[i] : null;
+                        mult = (d != null) ? d.UpgradeMultiplier : defaultUpgradeMultiplier;
+                    }
+
+                    payout += Mathf.RoundToInt(perFacePayout[faceVal] * mult);
+                }
             }
-            
+            else
+            {
+                payout = lastSum * sumMultiplier;
+            }
 
             lastPayout = payout;
 
@@ -233,13 +240,6 @@ public class DiceManager : MonoBehaviour
     public void RollAll()
     {
         if (dice == null) return;
-        
-        // Check if tier is selected in ShopManager
-        if (shopManager != null && !shopManager.IsTierSelected())
-        {
-            Debug.Log("RollAll prevented: No betting tier selected");
-            return;
-        }
         
             // prevent re-entrancy / multiple calls while a roll is already in progress
             if (isRolling)
@@ -284,9 +284,9 @@ public class DiceManager : MonoBehaviour
                 d.ResetToStart();
             }
 
-            // Reset rollsLeft to rollsPerReset value (don't modify rollsPerReset itself)
-            rollsLeft = rollsPerReset;
+            // notify UI of unchanged rollsLeft (so the shop refreshes buttons/text)
             OnRollsLeftChanged?.Invoke(rollsLeft);
+            AddRolls(rollsPerReset-rollsLeft);
         }
 
     // Rolls-left helpers
@@ -296,7 +296,6 @@ public class DiceManager : MonoBehaviour
     {
         if (amount <= 0) return;
         rollsLeft += amount;
-        rollsPerReset += amount;
         OnRollsLeftChanged?.Invoke(rollsLeft);
     }
 
@@ -307,41 +306,15 @@ public class DiceManager : MonoBehaviour
         return (int[])lastFaces.Clone();
     }
 
-    public bool[] GetLastUpgraded()
-    {
-        if (lastUpgraded == null) return new bool[0];
-        return (bool[])lastUpgraded.Clone();
-    }
-
-    // Get current actual upgrade status of all dice (not just from last roll)
-    public bool[] GetCurrentUpgraded()
-    {
-        if (dice == null) return new bool[0];
-        bool[] current = new bool[dice.Length];
-        for (int i = 0; i < dice.Length; i++)
-        {
-            current[i] = (dice[i] != null) && dice[i].IsUpgraded;
-        }
-        return current;
-    }
-
     public int GetLastSum() => lastSum;
     public int GetLastPayout() => lastPayout;
     public int GetPlayerBalance() => playerBalance;
 
-    // Deduct amount from player balance (for betting)
-    public void DeductBalance(int amount)
-    {
-        playerBalance -= amount;
-        Debug.Log($"DiceManager: DeductBalance({amount}). New balance: {playerBalance}");
-    }
-
     // Manually apply the last payout to the player balance (if not auto-applied)
     public void ApplyLastPayout()
     {
-        Debug.Log($"DiceManager: ApplyLastPayout called. lastPayout={lastPayout}, playerBalance before={playerBalance}");
+        Debug.Log("DiceManager: ApplyLastPayout called");
         playerBalance += lastPayout;
-        Debug.Log($"DiceManager: ApplyLastPayout finished. playerBalance after={playerBalance}");
 
         // optionally reset rolls when a payout is applied
         if (resetRollsOnPayout)
@@ -505,10 +478,5 @@ public class DiceManager : MonoBehaviour
         lastSum = 0;
         lastPayout = 0;
         results.Clear();
-    }
-
-    public int getMoney()
-    {
-        return playerBalance;
     }
 }
